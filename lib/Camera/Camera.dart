@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:medease/Camera/result_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import"package:flutter/material.dart";
 
@@ -29,18 +32,22 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver {
+
+  final _textRecogniser = TextRecognizer();
   bool _isPermissionGranted = false;
   CameraController? _cameraController;
   late final Future<void> _future;
+
   @override
   void initState() {
     super.initState();
     _future = _requestCameraPermission(); // Make sure _requestCameraPermission() returns a Future
   }
 
-
   void dispose(){
     WidgetsBinding.instance.removeObserver(this);
+    _stopCamera();
+    _textRecogniser.close();
     super.dispose();
   }
 
@@ -97,6 +104,19 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
     setState(() {});
   }
 
+Future<void> _scanImage() async {
+  if(_cameraController == null) return;
+  final navigator = Navigator.of(context);
+  try{
+    final pictureFile = await _cameraController!.takePicture();
+    final file = File(pictureFile.path);
+    final inputImage = InputImage.fromFile(file);
+    final recognizedText = await _textRecogniser.processImage(inputImage);
+    await navigator.push(MaterialPageRoute(builder: (context) => ResultScreen(text: recognizedText.text)));
+  }catch (e){
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Errrrrorrrrrr")));
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -138,9 +158,9 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
                     Expanded(child: Container()),
                     Container(
                       padding: const EdgeInsets.only(bottom: 30.0),
-                      child: const ElevatedButton(
-                        onPressed: null,
-                        child: Text("Scan here"),
+                      child: ElevatedButton(
+                        onPressed: _scanImage,
+                        child: const Text("Scan here"),
                       ),
                     ),
                   ],
