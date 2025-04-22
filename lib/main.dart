@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'Camera/Camera.dart';
 import 'screens/splash_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/login_screen.dart';
@@ -10,9 +11,9 @@ import 'screens/change_password_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/profile_screen.dart';
 
-
 void main() {
-  runApp(const MedEaseApp());
+  // runApp(const MedEaseApp());
+  runApp(const CameraScreen());
 }
 
 class MedEaseApp extends StatelessWidget {

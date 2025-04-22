@@ -28,6 +28,7 @@ dependencies {
     implementation 'com.android.support:multidex:2.0.1' //enter the latest multidex version
 }
 android {
+    compileSdkVersion 33
     namespace "com.example.medease_main"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
@@ -52,9 +53,10 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 32
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        minSdkVersion 21
+        minSdkVersion 22
         multiDexEnabled true
     }
 
